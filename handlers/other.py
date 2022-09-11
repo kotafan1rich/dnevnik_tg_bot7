@@ -30,7 +30,7 @@ options.add_argument('--headless')
 # options.add_argument(f'--proxy-server={random.choice(proxies)}')
 
 driver = webdriver.Firefox(
-    executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\geckodriver.exe',
+    executable_path='~/dnevni_tg_bot2/geckodriver',
     options=options
 )
 
