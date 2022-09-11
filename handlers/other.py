@@ -23,14 +23,14 @@ ua = [
 
 # proxies = ['89.107.197.165:3128', '89.108.74.82:1080']
 
-options = webdriver.ChromeOptions()
+options = webdriver.FirefoxOptions()
 options.add_argument(f'user-agent={random.choice(ua)}')
 options.add_argument('--disable-blink-features=AutomationControlled')
 options.add_argument('--headless')
 # options.add_argument(f'--proxy-server={random.choice(proxies)}')
 
-driver = webdriver.Chrome(
-    executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_seleniu_parser\chromedriver\chromedriver.exe',
+driver = webdriver.Firefox(
+    executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\geckodriver.exe',
     options=options
 )
 
