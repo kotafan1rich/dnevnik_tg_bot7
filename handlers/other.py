@@ -21,24 +21,25 @@ ua = [
     'Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25'
 ]
 
+
 # proxies = ['89.107.197.165:3128', '89.108.74.82:1080']
-
-options = webdriver.FirefoxOptions()
-options.add_argument(f'user-agent={random.choice(ua)}')
-options.add_argument('--disable-blink-features=AutomationControlled')
-options.add_argument('--headless')
-# options.add_argument(f'--proxy-server={random.choice(proxies)}')
-
-driver = webdriver.Firefox(
-    executable_path='~/dnevni_tg_bot2/geckodriver',
-    options=options
-)
-
-url = 'https://dnevnik2.petersburgedu.ru'
-# url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
 
 
 def get_data(date_f, date_t, user_id):
+    options = webdriver.ChromeOptions()
+    options.add_argument(f'user-agent={random.choice(ua)}')
+    options.add_argument('--disable-blink-features=AutomationControlled')
+    options.add_argument('--headless')
+    # options.add_argument(f'--proxy-server={random.choice(proxies)}')
+
+    driver = webdriver.Chrome(
+        executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
+        options=options
+    )
+
+    url = 'https://dnevnik2.petersburgedu.ru'
+    # url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
+
     login, password = db.get_login_and_password(user_id)[0], db.get_login_and_password(user_id)[1]
     # print(login)
     #
@@ -160,6 +161,9 @@ def get_data(date_f, date_t, user_id):
             data['data'][i] = round(sum(data['data'][i]) / len(data['data'][i]), 2)
         except ZeroDivisionError:
             data['data'][i] = 'нет оценок'
+    if data == {}:
+        data = 'нет оценок'
+    # driver.close()
     return data
 
 
@@ -177,7 +181,8 @@ def get_m_result(quater: int, user_id):
             res = f'{quater} четверть\n\n'
             for i, j in sort_result.items():
                 res += f'{i}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
+            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
+                                                                                      'ИЗО')
             return res
         elif quater == 2:
             date_from = f'05.11.{year - 1}'
@@ -187,7 +192,8 @@ def get_m_result(quater: int, user_id):
             res = f'{quater} четверть\n\n'
             for i, j in sort_result.items():
                 res += f'{i}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
+            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
+                                                                                      'ИЗО')
             return res
         if quater == 3:
             date_from = f'10.01.{year}'
@@ -275,5 +281,6 @@ def get_m_result(quater: int, user_id):
             res = f'{quater} четверть\n\n'
             for i, j in sort_result.items():
                 res += f'{i}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
+            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
+                                                                                      'ИЗО')
             return res

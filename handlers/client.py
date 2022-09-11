@@ -44,71 +44,71 @@ async def get_marks_1(message: types.Message):
     await bot.send_message(message.chat.id, 'подождите...')
     try:
         quater = int(message.text.split('_')[-1])
-    except IndexError:
-        quater = 5
-    if quater > 5:
-        res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
-        await bot.send_message(message.chat.id, res)
-    else:
-        res = other.get_m_result(quater, user_id=message.from_user.id)
-        await bot.send_message(message.chat.id, res)
+        if quater > 5:
+            res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
+            await bot.send_message(message.chat.id, res)
+        else:
+            res = other.get_m_result(quater, user_id=message.from_user.id)
+            await bot.send_message(message.chat.id, res)
+    except:
+        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
+
 
 
 async def get_marks_2(message: types.Message):
     await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split("_")[-1])
-    except IndexError:
-        quater = 5
-    if quater > 5:
-        res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
-        await bot.send_message(message.chat.id, res)
-    else:
-        res = other.get_m_result(quater, user_id=message.from_user.id)
-        await bot.send_message(message.chat.id, res)
+        quater = int(message.text.split('_')[-1])
+        if quater > 5:
+            res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
+            await bot.send_message(message.chat.id, res)
+        else:
+            res = other.get_m_result(quater, user_id=message.from_user.id)
+            await bot.send_message(message.chat.id, res)
+    except:
+        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
 
 
 async def get_marks_3(message: types.Message):
     await bot.send_message(message.chat.id, 'подождите...')
     try:
         quater = int(message.text.split('_')[-1])
-    except IndexError:
-        quater = 5
-    if quater > 5:
-        res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
-        await bot.send_message(message.chat.id, res)
-    else:
-        res = other.get_m_result(quater, user_id=message.from_user.id)
-        await bot.send_message(message.chat.id, res)
+        if quater > 5:
+            res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
+            await bot.send_message(message.chat.id, res)
+        else:
+            res = other.get_m_result(quater, user_id=message.from_user.id)
+            await bot.send_message(message.chat.id, res)
+    except:
+        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
 
 
 async def get_marks_4(message: types.Message):
     await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split("_")[-1])
-    except IndexError:
-        quater = 5
-    if quater > 5:
-        res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
-        await bot.send_message(message.chat.id, res)
-    else:
-        res = other.get_m_result(quater, user_id=message.from_user.id)
-        await bot.send_message(message.chat.id, res)
+        quater = int(message.text.split('_')[-1])
+        if quater > 5:
+            res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
+            await bot.send_message(message.chat.id, res)
+        else:
+            res = other.get_m_result(quater, user_id=message.from_user.id)
+            await bot.send_message(message.chat.id, res)
+    except:
+        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
 
 
 async def get_marks_5(message: types.Message):
     await bot.send_message(message.chat.id, 'подождите...')
     try:
         quater = int(message.text.split('_')[-1])
-    except IndexError:
-        await bot.send_message(message.chat.id, f'ошибка! комманда не распознана\n{help}')
-        quater = 5
-    if quater > 5:
-        res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
-        await bot.send_message(message.chat.id, res)
-    else:
-        res = other.get_m_result(quater, user_id=message.from_user.id)
-        await bot.send_message(message.chat.id, res)
+        if quater > 5:
+            res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
+            await bot.send_message(message.chat.id, res)
+        else:
+            res = other.get_m_result(quater, user_id=message.from_user.id)
+            await bot.send_message(message.chat.id, res)
+    except:
+        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
 
 
 async def get_help(message: types.Message):
