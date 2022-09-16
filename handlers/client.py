@@ -8,11 +8,12 @@ from db import Database
 db = Database('db_dnevnik_tg_bot.db')
 
 help = '''
-после запуска бота введите:
+После запуска бота введите:
 /login <логин гос-услуг>
 /password <пароль гос-услуг>
-для получения своего среднего балла введите:
-/get_marks <четверть или год> (5 = год)'''
+для получения своего среднего балла нажмите на соответствующие кнопки (5 = год)
+Все вопросы и отзывы сюда --> https://t.me/Gohdot.
+'''
 
 
 async def get_start(message: types.Message):
@@ -41,74 +42,73 @@ async def get_password(message: types.Message):
 
 
 async def get_marks_1(message: types.Message):
-    await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split('_')[-1])
+        await bot.send_message(message.chat.id, 'Подождите...')
+        quater = int(message.text[0])
         if quater > 5:
             res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
             await bot.send_message(message.chat.id, res)
         else:
             res = other.get_m_result(quater, user_id=message.from_user.id)
             await bot.send_message(message.chat.id, res)
-    except:
-        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
-
+    except AttributeError:
+        await bot.send_message(message.chat.id, 'Ошибка... оценки не найдены, попробуйте ещё раз')
 
 
 async def get_marks_2(message: types.Message):
-    await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split('_')[-1])
+        await bot.send_message(message.chat.id, 'Подождите...')
+        quater = int(message.text[0])
         if quater > 5:
             res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
             await bot.send_message(message.chat.id, res)
         else:
             res = other.get_m_result(quater, user_id=message.from_user.id)
             await bot.send_message(message.chat.id, res)
-    except:
-        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
+    except AttributeError:
+        await bot.send_message(message.chat.id, 'Ошибка... оценки не найдены, попробуйте ещё раз')
 
 
 async def get_marks_3(message: types.Message):
-    await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split('_')[-1])
+        await bot.send_message(message.chat.id, 'Подождите...')
+        quater = int(message.text[0])
         if quater > 5:
             res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
             await bot.send_message(message.chat.id, res)
         else:
             res = other.get_m_result(quater, user_id=message.from_user.id)
             await bot.send_message(message.chat.id, res)
-    except:
-        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
+    except AttributeError:
+        await bot.send_message(message.chat.id, 'Ошибка... оценки не найдены, попробуйте ещё раз')
 
 
 async def get_marks_4(message: types.Message):
-    await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split('_')[-1])
+        await bot.send_message(message.chat.id, 'Подождите...')
+        quater = int(message.text[0])
         if quater > 5:
             res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
             await bot.send_message(message.chat.id, res)
         else:
             res = other.get_m_result(quater, user_id=message.from_user.id)
             await bot.send_message(message.chat.id, res)
-    except:
-        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
+    except AttributeError:
+        await bot.send_message(message.chat.id, 'Ошибка... оценки не найдены, попробуйте ещё раз')
 
 
 async def get_marks_5(message: types.Message):
-    await bot.send_message(message.chat.id, 'подождите...')
     try:
-        quater = int(message.text.split('_')[-1])
+        await bot.send_message(message.chat.id, 'Подождите...')
+        quater = int(message.text[0])
         if quater > 5:
             res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
             await bot.send_message(message.chat.id, res)
         else:
             res = other.get_m_result(quater, user_id=message.from_user.id)
             await bot.send_message(message.chat.id, res)
-    except:
-        await bot.send_message(message.chat.id, 'ошибка... попробуйте ещё раз')
+    except AttributeError:
+        await bot.send_message(message.chat.id, 'Ошибка... оценки не найдены, попробуйте ещё раз')
 
 
 async def get_help(message: types.Message):
@@ -117,9 +117,9 @@ async def get_help(message: types.Message):
 
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(get_start, commands='start')
-    dp.register_message_handler(get_help, commands='help')
-    dp.register_message_handler(get_marks_1, commands='get_marks_1')
-    dp.register_message_handler(get_marks_2, commands='get_marks_2')
-    dp.register_message_handler(get_marks_3, commands='get_marks_3')
-    dp.register_message_handler(get_marks_4, commands='get_marks_4')
-    dp.register_message_handler(get_marks_5, commands='get_marks_5')
+    dp.register_message_handler(get_help, text=['help'])
+    dp.register_message_handler(get_marks_1, text=['1 четврть'])
+    dp.register_message_handler(get_marks_2, text=['2 четврть'])
+    dp.register_message_handler(get_marks_3, text=['3 четврть'])
+    dp.register_message_handler(get_marks_4, text=['4 четврть'])
+    dp.register_message_handler(get_marks_5, text=['5 четврть'])

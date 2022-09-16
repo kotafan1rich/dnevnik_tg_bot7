@@ -1,11 +1,11 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-b1 = KeyboardButton('/get_marks_1')
-b2 = KeyboardButton('/get_marks_2')
-b3 = KeyboardButton('/get_marks_3')
-b4 = KeyboardButton('/get_marks_4')
-b5 = KeyboardButton('/get_marks_5')
-b7 = KeyboardButton('/help')
+b1 = KeyboardButton('1 четврть')
+b2 = KeyboardButton('2 четврть')
+b3 = KeyboardButton('3 четврть')
+b4 = KeyboardButton('4 четврть')
+b5 = KeyboardButton('5 четврть')
+b7 = KeyboardButton('help')
 
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True)
 
