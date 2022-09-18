@@ -8,7 +8,8 @@ class Database:
 
     def add_user(self, user_id):
         with self.connection:
-            return self.cursor.execute("INSERT INTO `users` (`user_id`) VALUES (?)", (user_id,))
+            save = self.cursor.execute("INSERT INTO `users` (`user_id`) VALUES (?)", (user_id,))
+            return save
 
     def user_exists(self, user_id):
         with self.connection:
