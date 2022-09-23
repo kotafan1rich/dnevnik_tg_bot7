@@ -10,6 +10,13 @@ import os.path
 
 db = Database('db_dnevnik_tg_bot.db')
 
+
+estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест']
+good_value_of_estimate_type_name = []
+for i in estimate_type_name_value:
+    good_value_of_estimate_type_name.append(i)
+    good_value_of_estimate_type_name.append(f'{i[0].upper()}{i[1:]}')
+
 ua = [
     'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)',
     'Mozilla/5.0 (compatible; MSIE 10.0; Macintosh; Intel Mac OS X 10_7_3; Trident/6.0)',
@@ -24,11 +31,18 @@ ua = [
 
 
 # proxies = ['89.107.197.165:3128', '89.108.74.82:1080']
+def chek_esimate_type_name(estimate_type_name):
+    s = 0
+    for good_value in good_value_of_estimate_type_name:
+        if good_value in estimate_type_name.split():
+            s += 1
+        if s == 1:
+            return True
+    return False
 
 
 def register_and_save_cookies(user_id):
     options = webdriver.ChromeOptions()
-    options.binary_loctions = os.environ.get('GOOGLE_CHROME_BIN')
     options.add_argument(f'user-agent={random.choice(ua)}')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--headless')
@@ -36,7 +50,7 @@ def register_and_save_cookies(user_id):
     # options.add_argument(f'--proxy-server={random.choice(proxies)}')
 
     driver = webdriver.Chrome(
-        executable_path=os.environ.get('CHROME_DRIVER_PATH'),
+        executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
         options=options
     )
 
@@ -124,38 +138,37 @@ def get_marks(date_f, date_t, cookies):
 
     marks = {}
     marks_info = response.get('data').get('items')
-    for i in marks_info:
-        if i['subject_name'] != 'Физическая культура':
-            marks[i['subject_name']] = []
+    for info_marks_all in marks_info:
+        marks[info_marks_all['subject_name']] = []
 
-    for i in marks_info:
-        if i['subject_name'] != 'Физическая культура':
-            if 'Годовая' not in i['estimate_type_name'] and 'Итоговая' not in i['estimate_type_name'] and 'четверть' not in i['estimate_type_name'] and 'Посещаемость' not in i['estimate_type_name']:
-                if 'работа' in i['estimate_type_name'] or 'Работа' in i['estimate_type_name'] or 'Задание' in i['estimate_type_name']:
-                    marks[i['subject_name']].append(int(i['estimate_value_name']))
+    for subject_info in marks_info:
+        if subject_info['estimate_value_name'] != 'Замечание':
+            if 'Годовая' not in subject_info['estimate_type_name'] and 'Итоговая' not in subject_info['estimate_type_name'] and 'четверть' not in subject_info['estimate_type_name'] and 'Посещаемость' not in subject_info['estimate_type_name']:
+                if chek_esimate_type_name(subject_info['estimate_type_name']) and subject_info['estimate_value_name'] != 'Зачёт':
+                    marks[subject_info['subject_name']].append(int(subject_info['estimate_value_name']))
 
     total_pages = response.get('data').get('total_pages')
 
     if int(total_pages) > 1:
         if total_pages > 2:
-            for i in range(2, total_pages + 1):
+            for subject_info in range(2, total_pages + 1):
                 params = {
                     'p_educations[]': p_educations,
                     'p_date_from': date_f,
                     'p_date_to': date_t,
                     'p_limit': '100',
-                    'p_page': i,
+                    'p_page': subject_info,
                 }
 
                 response = requests.get('https://dnevnik2.petersburgedu.ru/api/journal/estimate/table', params=params,
                                         cookies=cookies, headers=headers).json()
                 marks_info = response.get('data').get('items')
 
-                for j in marks_info:
-                    if j['subject_name'] != 'Физическая культура':
-                        if 'Годовая' not in j['estimate_type_name'] and 'Итоговая' not in j['estimate_type_name'] and 'четверть' not in j['estimate_type_name'] and 'Посещаемость' not in j['estimate_type_name']:
-                            if 'работа' in i['estimate_type_name'] or 'Работа' in i['estimate_type_name'] or 'Задание' in i['estimate_type_name']:
-                                marks[i['subject_name']].append(int(i['estimate_value_name']))
+                for subject_info_1 in marks_info:
+                    if subject_info_1['estimate_value_name'] != 'Замечание':
+                        if 'Годовая' not in subject_info_1['estimate_type_name'] and 'Итоговая' not in subject_info_1['estimate_type_name'] and 'четверть' not in subject_info_1['estimate_type_name'] and 'Посещаемость' not in subject_info_1['estimate_type_name']:
+                            if chek_esimate_type_name(subject_info_1['estimate_type_name']) and subject_info_1['estimate_value_name'] != 'Зачёт':
+                                marks[subject_info_1['subject_name']].append(int(subject_info_1['estimate_value_name']))
         else:
             params = {
                 'p_educations[]': p_educations,
@@ -169,19 +182,19 @@ def get_marks(date_f, date_t, cookies):
                                     cookies=cookies, headers=headers).json()
             marks_info = response.get('data').get('items')
 
-            for j in marks_info:
-                if j['subject_name'] != 'Физическая культура':
-                    if 'Годовая' not in j['estimate_type_name'] and 'Итоговая' not in j['estimate_type_name'] and 'четверть' not in j['estimate_type_name'] and 'Посещаемость' not in j['estimate_type_name']:
-                        if 'работа' in j['estimate_type_name'] or 'Работа' in j['estimate_type_name'] or 'Задание' in j['estimate_type_name']:
-                            marks[j['subject_name']].append(int(j['estimate_value_name']))
+            for subject_info_1 in marks_info:
+                if subject_info_1['estimate_value_name'] != 'Замечание':
+                    if 'Годовая' not in subject_info_1['estimate_type_name'] and 'Итоговая' not in subject_info_1['estimate_type_name'] and 'четверть' not in subject_info_1['estimate_type_name'] and 'Посещаемость' not in subject_info_1['estimate_type_name']:
+                        if chek_esimate_type_name(subject_info_1['estimate_type_name']) and subject_info_1['estimate_value_name'] != 'Зачёт':
+                            marks[subject_info_1['subject_name']].append(int(subject_info_1['estimate_value_name']))
 
     data = {'data': marks}
 
-    for i in data['data']:
+    for subject_info in data['data']:
         try:
-            data['data'][i] = round(sum(data['data'][i]) / len(data['data'][i]), 2)
+            data['data'][subject_info] = round(sum(data['data'][subject_info]) / len(data['data'][subject_info]), 2)
         except ZeroDivisionError:
-            data['data'][i] = 'нет оценок'
+            data['data'][subject_info] = f'нет оценок'
     if data['data'] == {}:
         data = 'нет оценок'
     # driver.close()
@@ -203,10 +216,9 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
-                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                          'ИЗО')
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
+                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
             return res
         elif quater == 2:
             date_from = f'05.11.{year - 1}'
@@ -217,10 +229,9 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
-                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                          'ИЗО')
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
+                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
             return res
         if quater == 3:
             date_from = f'10.01.{year}'
@@ -231,10 +242,9 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
-                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                          'ИЗО')
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
+                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
             return res
         elif quater == 4:
             date_from = f'06.04.{year}'
@@ -245,10 +255,9 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
-                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                          'ИЗО')
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
+                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
             return res
         elif quater == 5:
             date_from = f'01.09.{year - 1}'
@@ -259,10 +268,9 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
-                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                          'ИЗО')
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
+                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
             return res
     else:
         if quater == 1:
@@ -274,8 +282,8 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
                 res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
                                                                                           'ИЗО')
             return res
@@ -288,10 +296,9 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
-                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                          'ИЗО')
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
+                res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
             return res
         elif quater == 3:
             date_from = f'10.01.{year + 1}'
@@ -302,8 +309,8 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
                 res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
                                                                                           'ИЗО')
             return res
@@ -316,8 +323,8 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
                 res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
                                                                                           'ИЗО')
             return res
@@ -330,8 +337,8 @@ def get_m_result(quater: int, user_id):
             else:
                 sort_result = dict(sorted(result.items()))
                 res = f'{quater} четверть\n\n'
-                for i, j in sort_result.items():
-                    res += f'{i}: {j}\n'
+                for subject, j in sort_result.items():
+                    res += f'{subject}: {j}\n'
                 res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
                                                                                           'ИЗО')
             return res
