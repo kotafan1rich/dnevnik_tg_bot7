@@ -100,7 +100,7 @@ async def get_marks_4(message: types.Message):
 async def get_marks_5(message: types.Message):
     try:
         await bot.send_message(message.chat.id, 'Подождите...')
-        quater = int(message.text[0])
+        quater = 5
         if quater > 5:
             res = 'четверть длжна быть меньше или равна 5, чтобы получить результат'
             await bot.send_message(message.chat.id, res)
@@ -122,4 +122,4 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(get_marks_2, text=['2 четврть'])
     dp.register_message_handler(get_marks_3, text=['3 четврть'])
     dp.register_message_handler(get_marks_4, text=['4 четврть'])
-    dp.register_message_handler(get_marks_5, text=['5 четврть'])
+    dp.register_message_handler(get_marks_5, text=['год'])
