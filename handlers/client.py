@@ -23,22 +23,27 @@ async def get_start(message: types.Message):
     await bot.send_message(message.chat.id, help, reply_markup=kb_client)
 
 
-@dp.message_handler(commands=['login'])
-async def get_login(message: types.Message):
-    if len(message.text.split()) > 2:
-        res = 'Логин не должен содержать пробелов'
-    else:
-        login = message.text.split()[1]
-        db.set_login(login=login, user_id=message.from_user.id)
-        res = f'Ваш логин {login} был добавлен'
-    await bot.send_message(message.chat.id, res)
 
+async def get_login_handler(message: types.Message):
+    await bot.send_message(message.chat.id, 'Ведите логин от гос услуг')
+    @dp.message_handler()
+    async def get_login(message_login):
+        if len(message.text.split()) > 2:
+            res = 'Логин не должен содержать пробелов'
+        else:
+            login = message_login.text
+            db.set_login(login=login, user_id=message_login.from_user.id)
+            res = f'Ваш логин {login} был добавлен'
+        await bot.send_message(message_login.chat.id, res)
 
-@dp.message_handler(commands=['password'])
-async def get_password(message: types.Message):
-    password = message.text.split()[1]
-    await db.set_password(password=password, user_id=message.from_user.id)
-    await bot.send_message(message.chat.id, f'Ваш пароль {password} был добавлен')
+async def get_password_hadler(message: types.Message):
+    await bot.send_message(message.chat.id, 'Введите пароль от гос услуг')
+
+    @dp.message_handler()
+    async def get_password(message_password: types.Message):
+        password = message_password.text
+        db.set_password(password=password, user_id=message_password.from_user.id)
+        await bot.send_message(message.chat.id, 'Ваш пароль был добавлен')
 
 
 async def get_marks_1(message: types.Message):
@@ -123,3 +128,5 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(get_marks_3, text=['3 четврть'])
     dp.register_message_handler(get_marks_4, text=['4 четврть'])
     dp.register_message_handler(get_marks_5, text=['год'])
+    dp.register_message_handler(get_login_handler, text=['login'])
+    dp.register_message_handler(get_password_hadler, text=['password'])
