@@ -8,7 +8,11 @@ b5 = KeyboardButton('год')
 b7 = KeyboardButton('help')
 b8 = KeyboardButton('password')
 b9 = KeyboardButton('login')
+b10 = KeyboardButton('Отмена')
 
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True)
-
 kb_client.row(b1, b2, b3).row(b4, b5).row(b9, b8).add(b7)
+
+kb_login_password = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_login_password.add(b10)
+
