@@ -49,15 +49,15 @@ def register_and_save_cookies(user_id):
     options.add_argument('--no-sandbox')
     # options.add_argument(f'--proxy-server={random.choice(proxies)}')
 
-    # driver = webdriver.Chrome(
-    #     executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
-    #     options=options
-    # )
-
-    driver = webdriver.Firefox(
-        executable_path='/snap/bin/geckodriver',
+    driver = webdriver.Chrome(
+        executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
         options=options
     )
+
+    # driver = webdriver.Firefox(
+    #     executable_path='/snap/bin/geckodriver',
+    #     options=options
+    # )
 
     url = 'https://dnevnik2.petersburgedu.ru'
     # url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
