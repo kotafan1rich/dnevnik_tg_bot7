@@ -122,8 +122,8 @@ async def get_help(message: types.Message):
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(get_start, commands='start')
     dp.register_message_handler(get_help, text=['help'])
-    dp.register_message_handler(get_marks_1, text=['1 четврть'])
-    dp.register_message_handler(get_marks_2, text=['2 четврть'])
-    dp.register_message_handler(get_marks_3, text=['3 четврть'])
-    dp.register_message_handler(get_marks_4, text=['4 четврть'])
-    dp.register_message_handler(get_marks_5, text=['год'])
+    dp.register_message_handler(get_marks_1, text=['1 четверть'])
+    dp.register_message_handler(get_marks_2, text=['2 четверть'])
+    dp.register_message_handler(get_marks_3, text=['3 четверть'])
+    dp.register_message_handler(get_marks_4, text=['4 четверть'])
+    dp.register_message_handler(get_marks_5, text=['Год'])
