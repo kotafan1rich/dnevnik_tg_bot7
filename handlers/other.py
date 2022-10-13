@@ -11,7 +11,7 @@ import os.path
 db = Database('db_dnevnik_tg_bot.db')
 
 
-estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест']
+estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест', 'чтение']
 good_value_of_estimate_type_name = []
 for i in estimate_type_name_value:
     good_value_of_estimate_type_name.append(i)
@@ -42,23 +42,23 @@ def chek_esimate_type_name(estimate_type_name):
 
 
 def register_and_save_cookies(user_id):
-    # options = webdriver.ChromeOptions()
-    options = webdriver.FirefoxOptions()
+    options = webdriver.ChromeOptions()
+    # options = webdriver.FirefoxOptions()
     options.add_argument(f'user-agent={random.choice(ua)}')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     # options.add_argument(f'--proxy-server={random.choice(proxies)}')
 
-    # driver = webdriver.Chrome(
-    #     executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
-    #     options=options
-    # )
-
-    driver = webdriver.Firefox(
-        executable_path='/snap/bin/geckodriver',
+    driver = webdriver.Chrome(
+        executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
         options=options
     )
+
+    # driver = webdriver.Firefox(
+    #     executable_path='/snap/bin/geckodriver',
+    #     options=options
+    # )
 
     url = 'https://dnevnik2.petersburgedu.ru'
     # url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'

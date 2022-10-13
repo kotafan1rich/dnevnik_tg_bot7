@@ -1,9 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-b1 = KeyboardButton('1 четврть')
-b2 = KeyboardButton('2 четврть')
-b3 = KeyboardButton('3 четврть')
-b4 = KeyboardButton('4 четврть')
+b1 = KeyboardButton('1 четверть')
+b2 = KeyboardButton('2 четверть')
+b3 = KeyboardButton('3 четверть')
+b4 = KeyboardButton('4 четверть')
 b5 = KeyboardButton('год')
 b7 = KeyboardButton('help')
 
