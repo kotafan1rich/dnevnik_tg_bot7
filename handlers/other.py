@@ -11,7 +11,7 @@ import os.path
 db = Database('db_dnevnik_tg_bot.db')
 
 
-estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест', 'чтение']
+estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест', 'чтение', 'сочинение', 'изложение']
 good_value_of_estimate_type_name = []
 for i in estimate_type_name_value:
     good_value_of_estimate_type_name.append(i)
