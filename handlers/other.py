@@ -42,6 +42,23 @@ def chek_esimate_type_name(estimate_type_name):
 
 
 def register_and_save_cookies(user_id):
+    headers = {
+        'Accept': '*/*',
+        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Access-Control-Allow-Origin': '*',
+        'Connection': 'keep-alive',
+        'Content-Type': 'text/plain',
+        'Referer': 'https://dnevnik2.petersburgedu.ru/estimate',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-agent': random.choice(ua),
+        'X-KL-Ajax-Request': 'Ajax_Request',
+        'X-Requested-With': 'XMLHttpRequest',
+        'sec-ch-ua': '"Chromium";v="104", " Not A;Brand";v="99", "Google Chrome";v="104"',
+        'sec-ch-ua-mobile': '?0',
+    }
+
     options = webdriver.ChromeOptions()
     # options = webdriver.FirefoxOptions()
     options.add_argument(f'user-agent={random.choice(ua)}')
@@ -80,9 +97,23 @@ def register_and_save_cookies(user_id):
     time.sleep(2)
     pickle.dump(driver.get_cookies(), open(f'cookies/cookies{user_id}', 'wb'))
     # driver.get('https://dnevnik2.petersburgedu.ru/estimate')
+    params_group_id = {
+        'p_page': '1',
+        'p_jurisdictions[]': '4',
+        'p_institutions[]': '1376',
+    }
+
+
     cookies1 = driver.get_cookies()
+
     for cookie in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
         driver.add_cookie(cookie)
+    cookies = {}
+    for cookies_data in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
+        cookies[cookies_data['name']] = str(cookies_data['value'])
+    group_id = requests.get('https://dnevnik2.petersburgedu.ru/api/journal/group/related-group-list', params=params_group_id,
+                 cookies=cookies, headers=headers).json().get('data').get('items')[0].get('id')
+    db.set_group_id(user_id=user_id, group_id=group_id)
 
     driver.refresh()
     return cookies1
@@ -96,11 +127,11 @@ def get_data(quater, user_id):
         cookies = {}
         for cookies_data in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
             cookies[cookies_data['name']] = str(cookies_data['value'])
-        data = get_marks(quater, cookies)
+        data = get_marks(quater, cookies, user_id=user_id)
     return data
 
 
-def get_marks(quater, cookies):
+def get_marks(quater, cookies, user_id):
     headers = {
         'Accept': '*/*',
         'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
@@ -121,15 +152,8 @@ def get_marks(quater, cookies):
     params = {
         'p_page': '1',
     }
+    group_id = db.get_group_id(user_id=user_id)
 
-    params_group_id = {
-        'p_page': '1',
-        'p_jurisdictions[]': '4',
-        'p_institutions[]': '1376',
-    }
-
-    group_id = requests.get('https://dnevnik2.petersburgedu.ru/api/journal/group/related-group-list', params=params_group_id,
-                            cookies=cookies, headers=headers).json().get('data').get('items')[0].get('id')
     params_date_f_t = {
         'p_group_ids[]': group_id,
         'p_page': '1',

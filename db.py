@@ -24,6 +24,15 @@ class Database:
         with self.connection:
             return self.cursor.execute("UPDATE `users` SET `password` = ? WHERE `user_id` = ?", (password, user_id,))
 
+    def set_group_id(self, user_id, group_id):
+        with self.connection:
+            return self.cursor.execute("UPDATE `users` SET `group_id` = ? WHERE `user_id` = ?", (group_id, user_id,))
+
+    def get_group_id(self, user_id):
+        with self.connection:
+            group_id = self.cursor.execute("SELECT `login`, `group_id` FROM `users` WHERE `user_id` = ?", (user_id,)).fetchall()
+            return group_id[0]
+
     def get_login_and_password(self, user_id):
         with self.connection:
             result = self.cursor.execute("SELECT `login`, `password` FROM `users` WHERE `user_id` = ?", (user_id,)).fetchall()
