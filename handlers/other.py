@@ -122,7 +122,7 @@ def register_and_save_cookies(user_id):
 def get_data(quater, user_id):
     if not os.path.exists(f'cookies/cookies{user_id}'):
         cookies_data = register_and_save_cookies(user_id)
-        data = get_marks(quater, cookies_data)
+        data = get_marks(quater, cookies_data, user_id=user_id)
     else:
         cookies = {}
         for cookies_data in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
