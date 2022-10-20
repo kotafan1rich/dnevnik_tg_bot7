@@ -59,8 +59,8 @@ def register_and_save_cookies(user_id):
         'sec-ch-ua-mobile': '?0',
     }
 
-    options = webdriver.ChromeOptions()
-    # options = webdriver.FirefoxOptions()
+    # options = webdriver.ChromeOptions()
+    options = webdriver.FirefoxOptions()
     options.add_argument(f'user-agent={random.choice(ua)}')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--headless')
@@ -72,10 +72,10 @@ def register_and_save_cookies(user_id):
         options=options
     )
 
-    # driver = webdriver.Firefox(
-    #     executable_path='/snap/bin/geckodriver',
-    #     options=options
-    # )
+    driver = webdriver.Firefox(
+        executable_path='/snap/bin/geckodriver',
+        options=options
+    )
 
     url = 'https://dnevnik2.petersburgedu.ru'
     # url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
