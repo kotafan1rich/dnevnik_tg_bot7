@@ -11,7 +11,7 @@ import os.path
 db = Database('db_dnevnik_tg_bot.db')
 
 
-estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест', 'чтение', 'сочинение', 'изложение']
+estimate_type_name_value = ['работа', 'задание', 'диктант', 'тест', 'чтение', 'сочинение', 'изложение', 'опрос']
 good_value_of_estimate_type_name = []
 for i in estimate_type_name_value:
     good_value_of_estimate_type_name.append(i)
@@ -59,23 +59,23 @@ def register_and_save_cookies(user_id):
         'sec-ch-ua-mobile': '?0',
     }
 
-    # options = webdriver.ChromeOptions()
-    options = webdriver.FirefoxOptions()
+    options = webdriver.ChromeOptions()
+    # options = webdriver.FirefoxOptions()
     options.add_argument(f'user-agent={random.choice(ua)}')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     # options.add_argument(f'--proxy-server={random.choice(proxies)}')
 
-    # driver = webdriver.Chrome(
-    #     executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
-    #     options=options
-    # )
-
-    driver = webdriver.Firefox(
-        executable_path='/snap/bin/geckodriver',
+    driver = webdriver.Chrome(
+        executable_path=r'C:\Users\Алексей\PycharmProjects\dnevnik_tg_bot\chrome\chromedriver.exe',
         options=options
     )
+
+    # driver = webdriver.Firefox(
+    #     executable_path='/snap/bin/geckodriver',
+    #     options=options
+    # )
 
     url = 'https://dnevnik2.petersburgedu.ru'
     # url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
@@ -103,30 +103,30 @@ def register_and_save_cookies(user_id):
         'p_institutions[]': '1376',
     }
 
-
-    cookies1 = driver.get_cookies()
-
     for cookie in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
         driver.add_cookie(cookie)
     cookies = {}
     for cookies_data in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
         cookies[cookies_data['name']] = str(cookies_data['value'])
-    group_id = requests.get('https://dnevnik2.petersburgedu.ru/api/journal/group/related-group-list', params=params_group_id,
-                 cookies=cookies, headers=headers).json().get('data').get('items')[0].get('id')
+
+    group_id = requests.get('https://dnevnik2.petersburgedu.ru/api/journal/group/related-group-list', params=params_group_id, cookies=cookies, headers=headers).json().get('data').get('items')[0].get('id')
     db.set_group_id(user_id=user_id, group_id=group_id)
 
-    driver.refresh()
-    return cookies1
+
+def convert_cookies(user_id):
+    cookies = {}
+    for cookies_data in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
+        cookies[cookies_data['name']] = str(cookies_data['value'])
+    return cookies
 
 
 def get_data(quater, user_id):
     if not os.path.exists(f'cookies/cookies{user_id}'):
-        cookies_data = register_and_save_cookies(user_id)
-        data = get_marks(quater, cookies_data, user_id=user_id)
+        register_and_save_cookies(user_id)
+        cookies = convert_cookies(user_id=user_id)
+        data = get_marks(quater=quater, cookies=cookies, user_id=user_id)
     else:
-        cookies = {}
-        for cookies_data in pickle.load(open(f'cookies/cookies{user_id}', 'rb')):
-            cookies[cookies_data['name']] = str(cookies_data['value'])
+        cookies = convert_cookies(user_id=user_id)
         data = get_marks(quater, cookies, user_id=user_id)
     return data
 
