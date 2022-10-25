@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 import pickle
 import time
 import random
@@ -59,8 +59,8 @@ def register_and_save_cookies(user_id):
         'sec-ch-ua-mobile': '?0',
     }
 
-    # options = webdriver.ChromeOptions()
-    options = webdriver.FirefoxOptions()
+    options = webdriver.ChromeOptions()
+    # options = webdriver.FirefoxOptions()
     options.add_argument(f'user-agent={random.choice(ua)}')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument('--headless')
@@ -72,10 +72,10 @@ def register_and_save_cookies(user_id):
         options=options
     )
 
-    driver = webdriver.Firefox(
-        executable_path='/snap/bin/geckodriver',
-        options=options
-    )
+    # driver = webdriver.Firefox(
+    #     executable_path='/snap/bin/geckodriver',
+    #     options=options
+    # )
 
     url = 'https://dnevnik2.petersburgedu.ru'
     # url1 = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
@@ -235,11 +235,28 @@ def get_marks(quater, cookies, user_id):
         try:
             data['data'][subject_info] = round(sum(data['data'][subject_info]) / len(data['data'][subject_info]), 2)
         except ZeroDivisionError:
-            data['data'][subject_info] = f'нет оценок'
+            data['data'][subject_info] = str('Нет оценок')
     if data['data'] == {}:
         data = 'нет оценок'
     # driver.close()
     return data
+
+
+def sort_data(data, quater):
+    sort_result = dict(sorted(data.items()))
+    if quater == 5:
+        res = f'Год\n\n'
+        for subject, j in sort_result.items():
+            res += f'{subject}: {j}\n'
+        res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
+                                                                                  'ИЗО')
+    else:
+        res = f'{quater} четверть\n\n'
+        for subject, j in sort_result.items():
+            res += f'{subject}: {j}\n'
+        res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
+                                                                                  'ИЗО')
+    return res
 
 
 def get_m_result(quater: int, user_id):
@@ -319,57 +336,34 @@ def get_m_result(quater: int, user_id):
         if result == 'нет оценок':
             res = 'Нет оценок'
         else:
-            sort_result = dict(sorted(result.items()))
-            res = f'{quater} четверть\n\n'
-            for subject, j in sort_result.items():
-                res += f'{subject}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                      'ИЗО')
+            res = sort_data(data=result, quater=quater)
         return res
+
     elif quater == 2:
         result: dict = get_data(quater=quater, user_id=user_id).get('data')
         if result == 'нет оценок':
             res = 'Нет оценок'
         else:
-            sort_result = dict(sorted(result.items()))
-            res = f'{quater} четверть\n\n'
-            for subject, j in sort_result.items():
-                res += f'{subject}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
+            res = sort_data(data=result, quater=quater)
         return res
     elif quater == 3:
         result: dict = get_data(quater=quater, user_id=user_id).get('data')
         if result == 'нет оценок':
             res = 'Нет оценок'
         else:
-            sort_result = dict(sorted(result.items()))
-            res = f'{quater} четверть\n\n'
-            for subject, j in sort_result.items():
-                res += f'{subject}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                      'ИЗО')
+            res = sort_data(data=result, quater=quater)
         return res
     elif quater == 4:
         result: dict = get_data(quater=quater, user_id=user_id).get('data')
         if result == 'нет оценок':
             res = 'Нет оценок'
         else:
-            sort_result = dict(sorted(result.items()))
-            res = f'{quater} четверть\n\n'
-            for subject, j in sort_result.items():
-                res += f'{subject}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                      'ИЗО')
+            res = sort_data(data=result, quater=quater)
         return res
     else:
         result: dict = get_data(quater=5, user_id=user_id).get('data')
         if result == 'нет оценок':
             res = 'Нет оценок'
         else:
-            sort_result = dict(sorted(result.items()))
-            res = f'{quater} четверть\n\n'
-            for subject, j in sort_result.items():
-                res += f'{subject}: {j}\n'
-            res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
-                                                                                      'ИЗО')
+            res = sort_data(data=result, quater=quater)
         return res
