@@ -1,9 +1,11 @@
 import os
 
+from aiogram.dispatcher.filters.state import StatesGroup, State
+from aiogram.dispatcher import FSMContext
 from aiogram import types, Dispatcher
 from create_bot import bot
 from handlers import other
-from keyboards import kb_client
+from keyboards import kb_client, kb_client_login
 from db import Database
 
 db = Database('db_dnevnik_tg_bot.db')
@@ -17,29 +19,52 @@ help = '''
 '''
 
 
+class FSMLoginEsia(StatesGroup):
+    login = State()
+    password = State()
+
+
+async def add_login_password_db(state, user_id):
+    async with state.proxy() as data:
+        login = data['login']
+        password = data['password']
+        db.set_login(user_id=user_id, login=login)
+        db.set_password(user_id=user_id, password=password)
+        try:
+            os.remove(f'cookies/cookies{user_id}')
+        except FileNotFoundError:
+            pass
+
+
 async def get_start(message: types.Message):
     if not db.user_exists(message.from_user.id):
         db.add_user(message.from_user.id)
-
     await bot.send_message(message.chat.id, help, reply_markup=kb_client)
 
 
-async def get_login(message: types.Message):
-    if len(message.text.split()) > 2:
-        res = 'Логин не должен содержать пробелов'
-    else:
-        login = message.text.split()[1]
-        db.set_login(login=login, user_id=message.from_user.id)
-        res = f'Ваш логин {login} был добавлен'
-        os.remove(f'cookies/cookies{message.chat.id}')
-    await bot.send_message(message.chat.id, res)
+async def login_users(message: types.Message):
+    await FSMLoginEsia.login.set()
+    await bot.send_message(message.chat.id, 'Введите логин', reply_markup=kb_client_login)
 
 
-async def get_password(message: types.Message):
-    password = message.text.split()[1]
-    os.remove(f'cookies/cookies{message.chat.id}')
-    db.set_password(password=password, user_id=message.from_user.id)
-    await bot.send_message(message.chat.id, f'Ваш пароль {password} был добавлен')
+async def get_login(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['login'] = message.text
+    await FSMLoginEsia.next()
+    await bot.send_message(message.chat.id, 'Введите пароль', reply_markup=kb_client_login)
+
+
+async def get_password(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['password'] = message.text
+    await add_login_password_db(state=state, user_id=message.from_user.id)
+    await bot.send_message(message.chat.id, 'Логин и пароль добавлены', reply_markup=kb_client)
+    await state.finish()
+
+
+async def cancel_handler(message: types.Message, state: FSMContext):
+    await state.finish()
+    await bot.send_message(message.chat.id, 'Отмена, так отмена', reply_markup=kb_client)
 
 
 async def get_marks_1(message: types.Message):
@@ -104,8 +129,11 @@ async def unknow_command(message: types.Message):
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(get_start, commands='start')
     dp.register_message_handler(get_help, text=['help'])
-    dp.register_message_handler(get_password, commands=['password'])
-    dp.register_message_handler(get_login, commands=['login'])
+    dp.register_message_handler(cancel_handler, state='*', text=['Отмена'])
+    dp.register_message_handler(login_users, text=['Изменить логин и пароль'], state=None)
+    dp.register_message_handler(get_password, state=FSMLoginEsia.password)
+    dp.register_message_handler(get_login, state=FSMLoginEsia.login)
+    dp.register_message_handler(cancel_handler, state='*', text=['Отмена'])
     dp.register_message_handler(get_marks_1, text=['1 четверть'])
     dp.register_message_handler(get_marks_2, text=['2 четверть'])
     dp.register_message_handler(get_marks_3, text=['3 четверть'])

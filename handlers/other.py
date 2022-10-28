@@ -93,7 +93,7 @@ def register_and_save_cookies(user_id):
     passw_esia = driver.find_element(By.ID, 'password')
     email_esia.send_keys(login)
     passw_esia.send_keys(password)
-    driver.find_element(By.ID, 'loginByPwdButton').click()
+    driver.find_element(By.CLASS_NAME, 'plain-button_wide').click()
     time.sleep(2)
     pickle.dump(driver.get_cookies(), open(f'cookies/cookies{user_id}', 'wb'))
     # driver.get('https://dnevnik2.petersburgedu.ru/estimate')
