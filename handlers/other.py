@@ -230,15 +230,12 @@ def get_marks(quater, cookies, user_id):
                             marks[subject_info_1['subject_name']].append(int(subject_info_1['estimate_value_name']))
 
     data = {'data': marks}
-
     for subject_info in data['data']:
         try:
             data['data'][subject_info] = round(sum(data['data'][subject_info]) / len(data['data'][subject_info]), 2)
         except ZeroDivisionError:
-            data['data'][subject_info] = str('Нет оценок')
-    if data['data'] == {}:
-        data = 'нет оценок'
-    # driver.close()
+            data['data'][subject_info] = 'Нет оценок'
+
     return data
 
 
