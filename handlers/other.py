@@ -236,6 +236,9 @@ def get_marks(quater, cookies, user_id):
         except ZeroDivisionError:
             data['data'][subject_info] = 'Нет оценок'
 
+    if data['data'] == {}:
+        data = 'нет оценок'
+
     return data
 
 
