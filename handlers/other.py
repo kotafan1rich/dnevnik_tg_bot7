@@ -230,11 +230,11 @@ def get_marks(quater, cookies, user_id):
                             marks[subject_info_1['subject_name']].append(int(subject_info_1['estimate_value_name']))
 
     data = {'data': marks}
-    for subject_info in data['data']:
+    for subject_info in data['data'].copy():
         try:
             data['data'][subject_info] = round(sum(data['data'][subject_info]) / len(data['data'][subject_info]), 2)
         except ZeroDivisionError:
-            data['data'][subject_info] = 'Нет оценок'
+            del data['data'][subject_info]
 
     if data['data'] == {}:
         data = 'нет оценок'
@@ -262,8 +262,6 @@ def sort_data(data, quater):
 def get_m_result(quater: int, user_id):
     # year = int(datetime.datetime.now().year)
     # month_now = int(datetime.datetime.now().month)
-    if quater > 5:
-        return 'четверть длжна быть меньше или равна 5, чтобы получить результат'
     # if 5 < month_now < 9:
     #     if quater == 1:
     #         date_from = f'01.09.{year - 1}'
