@@ -11,11 +11,10 @@ from db import Database
 db = Database('db_dnevnik_tg_bot.db')
 
 help = '''
-После запуска бота введите:
-/login <логин гос-услуг>
-/password <пароль гос-услуг>
-для получения своего среднего балла нажмите на соответствующие кнопки
-Все вопросы и отзывы сюда --> https://t.me/Gohdot.
+[1] Чтобы начать пользоваться ботом необходимо добавить логин и пароль от гос услуг для доступа к вашим оценкам. 
+[2] Для получения своего среднего балла нажмите на соответствующие кнопки.
+[3] Все вопросы и отзывы сюда --> https://t.me/Gohdot.
+!!! Полученные данные никак не используютя в посторонних целях и не передаются третим лицам !!!
 '''
 
 
@@ -36,10 +35,10 @@ async def add_login_password_db(state, user_id):
             pass
 
 
-async def get_start(message: types.Message):
-    if not db.user_exists(message.from_user.id):
-        db.add_user(message.from_user.id)
-    await bot.send_message(message.chat.id, help, reply_markup=kb_client)
+# async def get_start(message: types.Message):
+#     if not db.user_exists(message.from_user.id):
+#         db.add_user(message.from_user.id)
+#     await bot.send_message(message.chat.id, help, reply_markup=kb_client_start)
 
 
 async def login_users(message: types.Message):
@@ -127,7 +126,7 @@ async def unknow_command(message: types.Message):
 
 
 def register_handlers_client(dp: Dispatcher):
-    dp.register_message_handler(get_start, commands='start')
+    dp.register_message_handler(login_users, commands='start')
     dp.register_message_handler(get_help, text=['help'])
     dp.register_message_handler(cancel_handler, state='*', text=['Отмена'])
     dp.register_message_handler(login_users, text=['Изменить логин и пароль'], state=None)
