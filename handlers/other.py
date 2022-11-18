@@ -260,75 +260,7 @@ def sort_data(data, quater):
 
 
 def get_m_result(quater: int, user_id):
-    # year = int(datetime.datetime.now().year)
-    # month_now = int(datetime.datetime.now().month)
-    # if 5 < month_now < 9:
-    #     if quater == 1:
-    #         date_from = f'01.09.{year - 1}'
-    #         date_to = f'30.10.{year - 1}'
-    #         result: dict = get_data(date_t=date_to, date_f=date_from, user_id=user_id).get('data')
-    #         if result == 'нет оценок':
-    #             res = 'Нет оценок'
-    #         else:
-    #             sort_result = dict(sorted(result.items()))
-    #             res = f'{quater} четверть\n\n'
-    #             for subject, j in sort_result.items():
-    #                 res += f'{subject}: {j}\n'
-    #             res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
-    #         return res
-    #     elif quater == 2:
-    #         date_from = f'05.11.{year - 1}'
-    #         date_to = f'31.12.{year - 1}'
-    #         result: dict = get_data(date_t=date_to, date_f=date_from, user_id=user_id).get('data')
-    #         if result == 'нет оценок':
-    #             res = 'Нет оценок'
-    #         else:
-    #             sort_result = dict(sorted(result.items()))
-    #             res = f'{quater} четверть\n\n'
-    #             for subject, j in sort_result.items():
-    #                 res += f'{subject}: {j}\n'
-    #             res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
-    #         return res
-    #     if quater == 3:
-    #         date_from = f'10.01.{year}'
-    #         date_to = f'25.03.{year}'
-    #         result: dict = get_data(date_t=date_to, date_f=date_from, user_id=user_id).get('data')
-    #         if result == 'нет оценок':
-    #             res = 'Нет оценок'
-    #         else:
-    #             sort_result = dict(sorted(result.items()))
-    #             res = f'{quater} четверть\n\n'
-    #             for subject, j in sort_result.items():
-    #                 res += f'{subject}: {j}\n'
-    #             res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
-    #         return res
-    #     elif quater == 4:
-    #         date_from = f'06.04.{year}'
-    #         date_to = f'30.05.{year}'
-    #         result: dict = get_data(date_t=date_to, date_f=date_from, user_id=user_id).get('data')
-    #         if result == 'нет оценок':
-    #             res = 'Нет оценок'
-    #         else:
-    #             sort_result = dict(sorted(result.items()))
-    #             res = f'{quater} четверть\n\n'
-    #             for subject, j in sort_result.items():
-    #                 res += f'{subject}: {j}\n'
-    #             res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
-    #         return res
-    #     elif quater == 5:
-    #         date_from = f'01.09.{year - 1}'
-    #         date_to = f'30.05.{year}'
-    #         result: dict = get_data(date_t=date_to, date_f=date_from, user_id=user_id).get('data')
-    #         if result == 'нет оценок':
-    #             res = 'Нет оценок'
-    #         else:
-    #             sort_result = dict(sorted(result.items()))
-    #             res = f'{quater} четверть\n\n'
-    #             for subject, j in sort_result.items():
-    #                 res += f'{subject}: {j}\n'
-    #             res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство', 'ИЗО')
-    #         return res
-    # else:
+
     if quater == 1:
         result: dict = get_data(user_id=user_id, quater=quater).get('data')
         if result == 'нет оценок':
