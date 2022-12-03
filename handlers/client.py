@@ -35,23 +35,26 @@ async def add_login_password_db(state, user_id):
             pass
 
 
-# async def get_start(message: types.Message):
-#     if not db.user_exists(message.from_user.id):
-#         db.add_user(message.from_user.id)
-#     await bot.send_message(message.chat.id, help, reply_markup=kb_client_start)
+async def get_start(message: types.Message):
+    user_id = message.from_user.id
+
+    if not db.user_exists(user_id=user_id):
+        db.add_user(user_id=user_id)
+
+        login = db.get_login_and_password(user_id=user_id)[0]
+        password = db.get_login_and_password(user_id=user_id)[1]
+
+        if login is None or password is None:
+            await FSMLoginEsia.login.set()
+            await bot.send_message(message.chat.id, 'Введите логин', reply_markup=kb_client_login)
+    else:
+        await bot.send_message(message.chat.id, 'Снова здравствуйте', reply_markup=kb_client)
 
 
 async def login_users(message: types.Message):
-    user_id = message.from_user.id
-    if not db.user_exists(user_id=user_id):
-        db.add_user(user_id=user_id)
-    login = db.get_login_and_password(user_id=user_id)[0]
-    password = db.get_login_and_password(user_id=user_id)[1]
-    if login is None or password is None:
-        await FSMLoginEsia.login.set()
-        await bot.send_message(message.chat.id, 'Введите логин', reply_markup=kb_client_login)
-    else:
-        await bot.send_message(message.chat.id, 'Снова здравствуйте', reply_markup=kb_client)
+
+    await FSMLoginEsia.login.set()
+    await bot.send_message(message.chat.id, 'Введите логин', reply_markup=kb_client_login)
 
 
 async def get_login(message: types.Message, state: FSMContext):
@@ -134,7 +137,7 @@ async def unknow_command(message: types.Message):
 
 
 def register_handlers_client(dp: Dispatcher):
-    dp.register_message_handler(login_users, commands='start')
+    dp.register_message_handler(get_start, commands='start')
     dp.register_message_handler(get_help, text=['help'])
     dp.register_message_handler(cancel_handler, state='*', text=['Отмена'])
     dp.register_message_handler(login_users, text=['Изменить логин и пароль'], state=None)
