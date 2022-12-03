@@ -42,8 +42,16 @@ async def add_login_password_db(state, user_id):
 
 
 async def login_users(message: types.Message):
-    await FSMLoginEsia.login.set()
-    await bot.send_message(message.chat.id, 'Введите логин', reply_markup=kb_client_login)
+    user_id = message.from_user.id
+    if not db.user_exists(user_id=user_id):
+        db.add_user(user_id=user_id)
+    login = db.get_login_and_password(user_id=user_id)[0]
+    password = db.get_login_and_password(user_id=user_id)[1]
+    if login is None or password is None:
+        await FSMLoginEsia.login.set()
+        await bot.send_message(message.chat.id, 'Введите логин', reply_markup=kb_client_login)
+    else:
+        await bot.send_message(message.chat.id, 'Снова здравствуйте', reply_markup=kb_client)
 
 
 async def get_login(message: types.Message, state: FSMContext):

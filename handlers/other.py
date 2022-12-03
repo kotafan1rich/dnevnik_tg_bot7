@@ -230,37 +230,39 @@ def get_marks(quater, cookies, user_id):
                             marks[subject_info_1['subject_name']].append(int(subject_info_1['estimate_value_name']))
 
     data = {'data': marks}
-    for subject_info in data['data'].copy():
-        try:
-            data['data'][subject_info] = round(sum(data['data'][subject_info]) / len(data['data'][subject_info]), 2)
-        except ZeroDivisionError:
-            del data['data'][subject_info]
-
-    if data['data'] == {}:
-        data = 'нет оценок'
 
     return data
 
 
 def sort_data(data, quater):
+    for subject_info in data.copy():
+        try:
+            count_marks = len(data[subject_info])
+            sum_marks = sum(data[subject_info])
+
+            data[subject_info] = [round(sum_marks / count_marks, 2), count_marks]
+        except ZeroDivisionError:
+            del data[subject_info]
+
+    if data == {}:
+        data = 'нет оценок'
     sort_result = dict(sorted(data.items()))
     if quater == 5:
         res = f'Год\n\n'
         for subject, j in sort_result.items():
-            res += f'{subject}: {j}\n'
+            res += f'{subject}: {j[0]} ({j[1]})\n'
         res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
                                                                                   'ИЗО')
     else:
         res = f'{quater} четверть\n\n'
         for subject, j in sort_result.items():
-            res += f'{subject}: {j}\n'
+            res += f'{subject}: {j[0]} ({j[1]})\n'
         res = res.replace('Основы безопасности жизнедеятельности', 'ОБЖ').replace('Изобразительное искусство',
                                                                                   'ИЗО')
     return res
 
 
 def get_m_result(quater: int, user_id):
-
     if quater == 1:
         result: dict = get_data(user_id=user_id, quater=quater).get('data')
         if result == 'нет оценок':
